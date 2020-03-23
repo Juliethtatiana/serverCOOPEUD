@@ -1,17 +1,8 @@
-const { Client } = require('pg');
-
-const connectionData = {
-    user: 'postgres',
-    host: 'localhost',
-    database: 'GestorEventos',
-    port: 5432,
-  }
-  const client = new Client(connectionData)
 
 
-
-  client.connect();
- function validarUsuario(data){
+  
+ function validarUsuario(data,client){
+    client.connect();
     var sentence= 'SELECT * FROM usuarios WHERE email= \''+data.email+'\' AND password= \''+data.pass+'\'';
     return new Promise((resolve, reject) => {
         client.query(sentence)
@@ -42,5 +33,28 @@ const connectionData = {
     })
      
     }
+
+    function inscribirAsociado(data){
+        var sentence= 'INSERT INTO asociado (k_inscripcion,f_inscripcion,v_valor,i_estado,k_evento,k_tipoa,i_asiste,k_numeroa) VALUES ()';
+        return new Promise((resolve, reject) => {
+            client.query(sentence)
+        .then(response => {       
+           if(response.rowCount>0 ){  
+               
+            resolve(true);
+           }else{
+            resolve(false);
+           }
+            client.end()
+        })
+        .catch(err => {
+            client.end()
+        })
+          });
+         
+        }
+    
+    
+    module.exports.inscribirAsociado=inscribirAsociado;
     module.exports.select=select;
     module.exports.validarUsuario=validarUsuario;
