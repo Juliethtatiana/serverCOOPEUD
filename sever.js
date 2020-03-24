@@ -44,6 +44,57 @@ app.post('/user', (req,res)=>{
   res.send();
   
 })
+app.post('/registrar_evento', (req,res)=>{
+  var data={
+    n_nomevento: req.body.n_nomevento, 
+    o_descripcion:req.body.o_descripcion,
+    o_lugar:req.body.o_lugar,
+    f_inicio:req.body.f_inicio,
+    f_fin:req.body.f_fin,
+    f_maxinsc: req.body.f_maxinsc,
+    v_total: req.body.v_total,
+   o_obs: req.body.o_obs,
+   q_maxparticipantes:req.body.q_maxparticipantes,
+   f_maxcancel:req.body.f_maxcancel,
+   i_copago:req.body.i_copago,
+   i_pago:req.body.i_pago,
+   v_copago:req.body.v_copago,
+   q_cuotasmax:req.body.q_cuotasmax,
+   k_tipo:req.body.k_tipo,
+   k_proveedor:req.body.k_proveedor,
+   p_subsidio:req.body.p_subsidio
+  }
+  console.log(JSON.stringify(data));
+  evento.crearK_evento().then(response => {    
+    data.k_evento=response[0].k_evento+1;
+    evento.crearEvento(data).then(response=>{
+      console.log('revisa si hay copago '+ data.i_copago);
+      if(data.i_copago){
+        console.log('copagoooo');
+        evento.crearCaracteristicas(data).then(response=>{
+          if(response){
+            res.send('evento con copago creado');
+          }
+        })
+      }else{
+        res.send('evento creado');
+      }
+    })
+  })
+})
+app.post('/inscribirFamiliar', (req,res)=>{
+  console.log(req.body.evento);
+})
+app.post('/consultarTipoEvento', (req,res)=>{
+  evento.consultarTipo().then(response => { 
+    res.send(response); 
+  }) 
+})
+app.post('/consultarProveedor', (req,res)=>{
+  evento.consultarProveedor().then(response => { 
+    res.send(response); 
+  }) 
+})
 
 app.post('/inscribirFamiliar', (req,res)=>{
   console.log(req.body.evento);
