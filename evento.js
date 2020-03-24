@@ -89,6 +89,21 @@ function consultarTipo(){
     });
 
 }
+function consultarEvento(){
+  var sentence= 'SELECT * FROM evento ';
+    
+  return new Promise((resolve, reject) => {
+      pool.query(sentence)     
+  .then(response => {   
+     resolve(response.rows);    
+  })
+  .catch(err => {
+      
+  })
+    });
+
+}
+
 function crearEvento(data){
   var sentence= 'INSERT INTO evento (k_evento,n_nomevento,o_descripcion,o_lugar,'+
   'f_inicio,f_fin,f_cierre,f_maxinsc,v_total,o_obs,i_estado,i_sobrecupo,f_maxcancel,'+

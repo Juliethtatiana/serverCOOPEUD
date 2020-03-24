@@ -4,7 +4,8 @@ const bodyParser = require('body-parser');
 const select = require('./postgres');
 const evento = require('./evento');
 const asociado = require('./asociado');
-
+const inscripcion = require('./inscripcion');
+const familiar = require('./familiar');
 
 var port=8090;
 var appName="Server COOPEUD";
@@ -64,13 +65,11 @@ app.post('/registrar_evento', (req,res)=>{
    k_proveedor:req.body.k_proveedor,
    p_subsidio:req.body.p_subsidio
   }
-  console.log(JSON.stringify(data));
   evento.crearK_evento().then(response => {    
     data.k_evento=response[0].k_evento+1;
     evento.crearEvento(data).then(response=>{
       console.log('revisa si hay copago '+ data.i_copago);
-      if(data.i_copago){
-        console.log('copagoooo');
+      if(data.i_copago==true){
         evento.crearCaracteristicas(data).then(response=>{
           if(response){
             res.send('evento con copago creado');
@@ -82,8 +81,44 @@ app.post('/registrar_evento', (req,res)=>{
     })
   })
 })
+
+app.post('/consultarInscripciones', (req,res)=>{
+  var data={
+    k_evento: req.body.k_evento, 
+     }
+  
+  inscripcion.consultarInsc(data).then(response => { 
+    res.send(response);
+  }) 
+})
+app.post('/consultarIDFamiliar', (req,res)=>{
+  var data={
+    k_numeroa: req.body.k_numeroa, 
+     }
+  console.log(data);
+  familiar.consultarIDFamiliar(data).then(response => { 
+    res.send(response);
+  }) 
+})
 app.post('/inscribirFamiliar', (req,res)=>{
-  console.log(req.body.evento);
+  var data={
+    k_numeroa: req.body.k_numeroa,
+    k_evento: req.body.k_evento,
+    k_numerof:req.body.k_numerof,
+    k_tipof:req.body.k_tipof
+  }
+  inscripcion.consultarUltimoDetalleInsc().then(response =>{
+    data.k_detalleinsc=response[0].k_detalleinsc+1;
+    inscripcion.consultarInscFamiliar(data).then(response =>{
+      data.k_inscripcion=response[0].k_inscripcion;
+      familiar.inscribirFamiliar(data).then(response =>{
+       res.send('inscrito exitosamente');
+    
+      })   
+    })
+  })
+  
+  
 })
 app.post('/consultarTipoEvento', (req,res)=>{
   evento.consultarTipo().then(response => { 
@@ -96,9 +131,7 @@ app.post('/consultarProveedor', (req,res)=>{
   }) 
 })
 
-app.post('/inscribirFamiliar', (req,res)=>{
-  console.log(req.body.evento);
-})
+
 app.post('/asociado', (req,res)=>{
   var data={
     k_tipoa: req.body.k_tipoa, 
