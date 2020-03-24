@@ -48,7 +48,29 @@ app.post('/user', (req,res)=>{
 app.post('/inscribirFamiliar', (req,res)=>{
   console.log(req.body.evento);
 })
-
+app.post('/asociado', (req,res)=>{
+  var data={
+    k_tipoa: req.body.k_tipoa, 
+    k_numeroa: req.body.k_numeroa, 
+    n_nomuno:req.body.n_nomuno,
+    n_nomdos:req.body.n_nomdos,
+    n_apeuno:req.body.n_apeuno,
+    n_apedos:req.body.n_apedos,
+    o_telefono: req.body.o_telefono,
+    f_nacimiento:req.body.f_nacimiento,
+   f_afiliacion: req.body.f_afiliacion,
+     v_sueldo: req.body.v_sueldo
+  }
+  asociado.validarAsociado(data.k_numeroa).then(response => { 
+    if(response>0){
+      res.send('el asociado ya se encuentra registrado');
+    }else{
+      asociado.registrarAsociado(data).then(response => {
+        res.send('usuario registrado exitosamente');
+       })
+    }
+  }) 
+})
 app.post('/consultarIDEvento', (req,res)=>{
   evento.consultarIDEventoActivo().then(response => { 
     res.send(response); 

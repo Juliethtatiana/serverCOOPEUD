@@ -30,13 +30,13 @@ const connectionData = {
 
     function validarAsociado(k_numeroa){
     
-      var sentence= 'SELECT * FROM asociado WHERE k_numeroa= '+data.k_numeroa;
+      var sentence= 'SELECT * FROM asociado WHERE k_numeroa= '+k_numeroa;
       return new Promise((resolve, reject) => {
           client.query(sentence)
       .then(response => {  
          
   
-         resolve(response.rows);
+         resolve(response.rowCount);
         
       })
       .catch(err => {
@@ -64,9 +64,9 @@ const connectionData = {
     }
  function registrarAsociado(data){
       var sentence= 'INSERT INTO asociado (k_tipoa, k_numeroa, '+
-      'n_nomuno, n_nomdos, n_apeuno,n_apedos,f_nacimiento,f_afiliacion,v_suelo'+
-      ',o_telefono) VALUES ('+data.k_tipoa+','+data.n_nomuno+','+data.n_nomdos+','+
-      data.n_apeuno+','+data.n_apedos+'TO_DATE('+data.f_nacimiento+',\'dd-mon-yyyy\')'+
+      'n_nomuno, n_nomdos, n_apeuno,n_apedos,f_nacimiento,f_afiliacion,v_sueldo'+
+      ',o_telefono) VALUES (\''+data.k_tipoa+'\','+data.k_numeroa+',\''+data.n_nomuno+'\',\''+data.n_nomdos+'\',\''+
+      data.n_apeuno+'\',\''+data.n_apedos+'\',\''+data.f_nacimiento+'\','+
       '\''+data.f_afiliacion+'\','+data.v_sueldo+','+
       data.o_telefono+') ';
    return new Promise((resolve, reject) => {
@@ -74,12 +74,11 @@ const connectionData = {
        client.query(sentence)
    .then(response => {  
       
-
-      resolve(true);
+      resolve(response);
      
    })
    .catch(err => {
-       
+      console.log('error: '+err);
    })
      });
    } 
@@ -102,7 +101,7 @@ const connectionData = {
 
 
    
-
+   module.exports.validarAsociado=validarAsociado; 
    module.exports.registrarAsociado=registrarAsociado;   
     module.exports.consultarK_tipoa=consultarK_tipoa;
     module.exports.incribirAsociado=incribirAsociado;
