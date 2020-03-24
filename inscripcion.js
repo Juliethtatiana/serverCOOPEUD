@@ -11,9 +11,9 @@
     const client = new Client(connectionData)
   
     client.connect();
- function validarUsuario(data){
+ function consultarUltimaInsc(){
    
-    var sentence= 'SELECT * FROM usuarios WHERE email= \''+data.email+'\' AND password= \''+data.pass+'\'';
+    var sentence= 'SELECT k_inscripcion FROM inscripcion ';
     return new Promise((resolve, reject) => {
         client.query(sentence)
     .then(response => {       
@@ -31,19 +31,4 @@
       });
     }
 
-     function select(username){
-    var sentence= 'SELECT * FROM usuarios ';
-    client.query(sentence)
-    .then(response => {
-        console.log(response.rows)
-        client.end()
-    })
-    .catch(err => {
-        client.end()
-    })
-     
-    }
-
-   
-    module.exports.select=select;
-    module.exports.validarUsuario=validarUsuario;
+    module.exports.consultarUltimaInsc=consultarUltimaInsc;

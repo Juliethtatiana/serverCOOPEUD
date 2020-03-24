@@ -16,7 +16,7 @@ pool.on('error', (err, client) => {
     console.error('Unexpected error on idle client', err)
     process.exit(-1)
   })
-function consultarIDEvento(){
+function consultarIDEventoActivo(){
     var sentence= 'SELECT k_evento,n_nomevento FROM evento ';
     
         return new Promise((resolve, reject) => {
@@ -34,25 +34,10 @@ function consultarIDEvento(){
           });
     
 }
- function consultarEvento(){
-    client.connect();
-    var sentence= 'SELECT k_evento,n_nomevento FROM evento ';
-    return new Promise((resolve, reject) => {
-        client.query(sentence)
-    .then(response => {  
-           
-       resolve(response.rows);
-        client.end()
-    })
-    .catch(err => {
-        client.end()
-    })
-      });
-    }
 
    
 
     
     
 
-    module.exports.consultarIDEvento=consultarIDEvento;
+    module.exports.consultarIDEventoActivo=consultarIDEventoActivo;
