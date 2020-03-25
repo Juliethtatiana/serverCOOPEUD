@@ -91,6 +91,35 @@ app.post('/consultarInscripciones', (req,res)=>{
     res.send(response);
   }) 
 })
+app.post('/consultarEventos', (req,res)=>{
+  var data;
+  
+  evento.consultarEvento().then(response => { 
+    data=response;
+    var promises = data.map(function (item) { // return array of promises
+      // return the promise:
+      return  evento.consultarnombreTipo(item).then(res => { 
+          
+        item.n_nomtipo=res[0].n_nomtipo;
+        
+         
+      } , function(err) {
+              console.error(err);
+          });
+  });
+  Promise.all(promises).then(function () {
+    console.log(data);
+    res.send(data);
+    //do something with the finalized list of albums here
+});
+
+     
+
+
+  
+ 
+  }) 
+})
 app.post('/consultarIDFamiliar', (req,res)=>{
   var data={
     k_numeroa: req.body.k_numeroa, 
@@ -110,11 +139,17 @@ app.post('/inscribirFamiliar', (req,res)=>{
   inscripcion.consultarUltimoDetalleInsc().then(response =>{
     data.k_detalleinsc=response[0].k_detalleinsc+1;
     inscripcion.consultarInscFamiliar(data).then(response =>{
-      data.k_inscripcion=response[0].k_inscripcion;
-      familiar.inscribirFamiliar(data).then(response =>{
-       res.send('inscrito exitosamente');
-    
-      })   
+      if(response.lenght){
+        data.k_inscripcion=response[0].k_inscripcion;
+        familiar.inscribirFamiliar(data).then(response =>{
+          res.send('inscrito exitosamente');
+          
+         }) 
+    }else{
+      res.send('el asociado no esta inscrito al evento');
+      
+    }
+        
     })
   })
   

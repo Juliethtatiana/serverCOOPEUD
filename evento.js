@@ -1,4 +1,3 @@
-
 const { Pool } = require('pg');
 var conConfig={
     user: 'postgres',
@@ -75,6 +74,21 @@ function consultarProveedor(){
     });
 
 }
+function consultarnombreTipo(data){
+  var sentence= 'SELECT n_nomtipo FROM tipo  WHERE k_tipo='+data.k_tipo;
+    //console.log(sentence);
+  return new Promise((resolve, reject) => {
+      pool.query(sentence)     
+  .then(response => {   
+    //console.log(response.rows);
+     resolve(response.rows);    
+  })
+  .catch(err => {
+      
+  })
+    });
+
+}
 function consultarTipo(){
   var sentence= 'SELECT k_tipo,n_nomtipo FROM tipo ';
     
@@ -89,9 +103,9 @@ function consultarTipo(){
     });
 
 }
+
 function consultarEvento(){
-  var sentence= 'SELECT * FROM evento ';
-    
+  var sentence= 'SELECT * FROM evento ';    
   return new Promise((resolve, reject) => {
       pool.query(sentence)     
   .then(response => {   
@@ -127,6 +141,8 @@ function crearEvento(data){
         });
   
 }
+module.exports.consultarnombreTipo=consultarnombreTipo;
+module.exports.consultarEvento=consultarEvento;
 module.exports.crearCaracteristicas=crearCaracteristicas;
 module.exports.crearEvento=crearEvento;
 module.exports.consultarProveedor=consultarProveedor;
