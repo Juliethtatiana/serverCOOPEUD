@@ -10,6 +10,24 @@
   
     client.connect();
 
+    function validarInscripcion(data){
+
+      var sentence= 'SELECT * FROM detalle_inscripcion WHERE k_numerof= '+data.k_numerof ;
+      console.log();
+      return new Promise((resolve, reject) => {
+          client.query(sentence)
+      .then(response => {  
+         
+  
+         resolve(response.rowCount);
+        
+      })
+      .catch(err => {
+          console.log(err);
+      })
+        });
+      }
+
     function consultarIDFamiliar(data){
    
       var sentence= 'SELECT k_numerof,k_tipof FROM familiar WHERE k_numeroa = '+data.k_numeroa;
@@ -42,5 +60,6 @@
         })
           });
         }
+    module.exports.validarInscripcion=validarInscripcion;
     module.exports.inscribirFamiliar=inscribirFamiliar;
     module.exports.consultarIDFamiliar=consultarIDFamiliar;    

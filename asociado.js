@@ -44,10 +44,34 @@ const connectionData = {
       })
         });
       } 
+   function validarInscripcion(k_numeroa){
+
+      var sentence= 'SELECT * FROM inscripcion WHERE k_numeroa= '+k_numeroa;
+      
+      return new Promise((resolve, reject) => {
+          client.query(sentence)
+      .then(response => {  
+         
+  
+         resolve(response.rowCount);
+        
+      })
+      .catch(err => {
+          
+      })
+        });
+      }
+   
  function incribirAsociado(data){
+    var asiste;
+    if(data.i_asiste==true){
+      asiste="S";
+    }else{
+      asiste="N";
+    }
        var sentence= 'INSERT INTO inscripcion (f_inscripcion, '+
        'v_valor, i_estado, k_evento,k_tipoa,i_asiste,k_numeroa) VALUES ('+
-       '\''+data.f_inscripcion+'\',1700.00, \'Activo\','+data.k_evento+',\''+data.k_tipoa+'\',\'S\','+data.k_numeroa+') ';
+       '\''+data.f_inscripcion+'\','+data.v_copago+', \'Activo\','+data.k_evento+',\''+data.k_tipoa+'\',\''+asiste+'\','+data.k_numeroa+') ';
        console.log(sentence);
     return new Promise((resolve, reject) => {
         client.query(sentence)
@@ -58,7 +82,7 @@ const connectionData = {
       
     })
     .catch(err => {
-        console.log('error: '+err);
+        console.log(err);
     })
       });
     }
@@ -99,8 +123,7 @@ const connectionData = {
    });
  }
 
-
-   
+ module.exports.validarInscripcion=validarInscripcion; 
    module.exports.validarAsociado=validarAsociado; 
    module.exports.registrarAsociado=registrarAsociado;   
     module.exports.consultarK_tipoa=consultarK_tipoa;

@@ -63,7 +63,8 @@ app.post('/registrar_evento', (req,res)=>{
    q_cuotasmax:req.body.q_cuotasmax,
    k_tipo:req.body.k_tipo,
    k_proveedor:req.body.k_proveedor,
-   p_subsidio:req.body.p_subsidio
+   p_subsidio:req.body.p_subsidio,
+   
   }
   evento.crearK_evento().then(response => {    
     data.k_evento=response[0].k_evento+1;
@@ -139,7 +140,7 @@ app.post('/inscribirFamiliar', (req,res)=>{
   inscripcion.consultarUltimoDetalleInsc().then(response =>{
     data.k_detalleinsc=response[0].k_detalleinsc+1;
     inscripcion.consultarInscFamiliar(data).then(response =>{
-      if(response.lenght){
+      if(response[0]){
         data.k_inscripcion=response[0].k_inscripcion;
         familiar.inscribirFamiliar(data).then(response =>{
           res.send('inscrito exitosamente');
@@ -211,16 +212,37 @@ today = dd + '-' + mm + '-' + yyyy;
   var data={
     k_numeroa: req.body.k_numeroa,
     k_evento: req.body.k_evento,
-    f_inscripcion:today
+    f_inscripcion:today,
+    i_asiste:req.body.i_asiste
   }
-  asociado.consultarK_tipoa(data).then(response =>{
-    data.k_tipoa=response[0].k_tipoa;
-    asociado.incribirAsociado(data).then(response => { 
-      if(response){
-        console.log('holii');
-        res.send('Asociado inscrito exitosamente');
-      }
-    })
+  asociado.validarInscripcion(data.k_numeroa).then(response=>{
+    console.log(response);
+    if(response==0){
+      asociado.consultarK_tipoa(data).then(response =>{
+        data.k_tipoa=response[0].k_tipoa;
+        evento.consultarValorCopago(data).then(response =>{ 
+          if(response[0]){
+            //console.log('pasa');
+            data.v_copago=response[0].v_copago;
+          }else{
+            //console.log('nopasa');
+            data.v_copago= 0.0;
+          }
+        
+          asociado.incribirAsociado(data).then(response => { 
+            if(response){
+              
+              res.send('Asociado inscrito exitosamente');
+            }
+          })
+        })
+        
+      })
+    }else{
+    res.send('el asociado ya estaba inscrito a este evento  ');
+    }
+   
   })
+  
     
 })

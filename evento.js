@@ -45,6 +45,21 @@ function crearK_evento(){
   })
     });
 }
+function consultarValorCopago(data){
+  var sentence= 'SELECT v_copago FROM caracteristica WHERE k_evento= '+data.k_evento;
+  
+  return new Promise((resolve, reject) => {
+      pool.query(sentence)
+      
+  .then(response => {      
+     resolve(response.rows);
+     
+  })
+  .catch(err => {
+      console.log('error: '+ err);
+  })
+    });
+}
 function crearCaracteristicas(data){
   var sentence= 'INSERT INTO caracteristica (k_evento,i_pago,v_copago,'+
   'q_cuotasmax,p_subsidio) VALUES ('+data.k_evento+',\''+data.i_pago+'\','+
@@ -141,6 +156,7 @@ function crearEvento(data){
         });
   
 }
+module.exports.consultarValorCopago=consultarValorCopago;
 module.exports.consultarnombreTipo=consultarnombreTipo;
 module.exports.consultarEvento=consultarEvento;
 module.exports.crearCaracteristicas=crearCaracteristicas;
